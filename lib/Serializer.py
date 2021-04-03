@@ -16,13 +16,13 @@ class Serializer:
             self.form = new_form
             return True
 
-    def load(self, fp, as_dict=0):
+    def load(self, fp):
         serializer = SerializerFactory.factory.get_serializer(self.form)
-        self.data = serializer.load(fp, as_dict)
+        self.data = serializer.load(fp)
 
-    def loads(self, as_dict=0):
+    def loads(self):
         serializer = SerializerFactory.factory.get_serializer(self.form)
-        self.data = serializer.loads(self.string, as_dict)
+        self.data = serializer.loads(self.string)
 
     def dump(self, fp):
         serializer = SerializerFactory.factory.get_serializer(self.form)

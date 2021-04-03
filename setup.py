@@ -9,7 +9,7 @@ setup(
     license='MIT',
     python_requires='>=3.8',
 )
-
+'''
 import os
 from pathlib import Path
 
@@ -21,3 +21,4 @@ os.system('cp -a . ~/lib')
 os.system('chmod +x ~/lib/main.py')
 with open(home + '/.bashrc', 'a') as file:
     file.write("alias redump='" + "~/lib/main.py'")
+    '''
