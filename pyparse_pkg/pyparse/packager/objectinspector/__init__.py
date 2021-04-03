@@ -1,1 +1,1 @@
-from . import *
+from .objectinspector import *

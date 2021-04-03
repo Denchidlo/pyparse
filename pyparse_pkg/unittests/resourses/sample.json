@@ -1,1 +1,12 @@
-null
+import json
+from packager import *
+
+
+with open("sample.json", "r") as reader:
+    o = Unpacker().unpack(json.load(reader))
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+with open("sample.json", 'w') as writer:
+    json.dump(Packer().pack(b), writer)
