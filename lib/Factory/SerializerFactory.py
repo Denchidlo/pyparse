@@ -20,7 +20,7 @@ class SerializerFactory:
 
 factory = SerializerFactory()
 
-factory.create_serializer('JSON', JsonParser.Json)
-factory.create_serializer('Pickle', TomlParser.Toml)
-factory.create_serializer('Yaml', YamlParser.Yaml)
-factory.create_serializer('Toml', PickleParser.Pickle)
+factory.create_serializer('JSON', JsonParser.JsonParser)
+factory.create_serializer('Toml', TomlParser.TomlParser)
+factory.create_serializer('Yaml', YamlParser.YamlParser)
+factory.create_serializer('Pickle', PickleParser.PickleParser)

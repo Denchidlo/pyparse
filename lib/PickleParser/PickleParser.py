@@ -3,30 +3,32 @@ from typing import Any, IO
 from pickle import dumps, loads
 from packager import *
 
-class Pickle:
+class PickleParser:
     base_dumps = dumps
     base_loads = loads
 
-    def dump(obj: object, file: object=None) -> None:
+    def dump(self, obj: object, file: object=None) -> None:
         packed_obj = Packer().pack(obj)
         if file:
-            file.write(Pickle.base_dumps(packed_obj))
+            with open(file, 'w+') as file:
+                file.write(PickleParser.base_dumps(packed_obj))
         else:
             raise ValueError("File transfer aborted")
 
-    def dumps(obj: object) -> None:
+    def dumps(self, obj: object) -> None:
         packed_obj = Packer().pack(obj)
-        return Pickle.base_dumps(packed_obj)
+        return PickleParser.base_dumps(packed_obj)
 
-    def load(file: object) -> Any:
+    def load(self, file: object) -> Any:
         if file:
-            raw_obj = Pickle.base_loads(file.read())
+            with open(file, 'w+') as file:
+                raw_obj = PickleParser.base_loads(file.read())
             unpacked_obj = Unpacker().unpack(raw_obj)
             return unpacked_obj
         else:
             raise ValueError("File transfer aborted")
 
-    def loads(json: str) -> Any:
-        raw_obj = Pickle.base_loads(json)
+    def loads(self, json: str) -> Any:
+        raw_obj = PickleParser.base_loads(json)
         unpacked_obj = Unpacker().unpack(raw_obj)
         return unpacked_obj
