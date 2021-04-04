@@ -3,13 +3,22 @@ import Serializer
 serializer = Serializer.Serializer()
 serializer.change_form('json')
 
-ar = [serializer, {"12": 45}]
-serializer.data = ar
 
+class A():
+    def __init__(self):
+        self.x = 5
+
+a = A()
+
+def fun():
+    print(a)
+
+serializer.data = a
 serializer.dumps()
 
 print(serializer.string)
 
 serializer.loads()
 
-print(serializer.data)
+loaded = serializer.data
+print(loaded.x)
