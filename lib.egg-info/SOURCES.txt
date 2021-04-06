@@ -3,7 +3,6 @@ setup.py
 lib/Serializer.py
 lib/__init__.py
 lib/redump.py
-lib/shell.py
 lib/test.py
 lib.egg-info/PKG-INFO
 lib.egg-info/SOURCES.txt

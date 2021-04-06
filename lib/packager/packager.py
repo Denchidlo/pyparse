@@ -5,9 +5,9 @@ from datetime import datetime
 import inspect
 from types import FunctionType
 from sys import builtin_module_names, modules
-from packager.objectinspector import *
-from packager.creator import *
-from packager.pool import *
+from lib.packager.objectinspector import *
+from lib.packager.creator import *
+from lib.packager.pool import *
 
 class Packer:
     def pack(self, obj: object, __globals__=globals()):

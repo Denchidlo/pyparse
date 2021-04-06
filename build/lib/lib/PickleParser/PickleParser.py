@@ -1,7 +1,7 @@
 from io import FileIO
 from typing import Any, IO
 from pickle import dumps, loads
-from packager import *
+from lib.packager import *
 
 class PickleParser:
     base_dumps = dumps
