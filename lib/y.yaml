@@ -1,5 +1,5 @@
 .META:
-  '139770829669280':
+  '140593275184032':
     .code: "def __init__(self):\n\n    self.x = 5\n"
     .metatype: func
     .module: __main__
@@ -9,7 +9,7 @@
       globals: {}
       nonlocals: {}
       unbound: {}
-  '94389695385072':
+  '94018109107488':
     .class:
       attrs:
       - .collection_type: tuple
@@ -20,7 +20,7 @@
       - .collection_type: tuple
         .list:
         - __init__
-        - .metaid: '139770829669280'
+        - .metaid: '140593275184032'
         - method
       - .collection_type: tuple
         .list:
@@ -36,6 +36,5 @@
     .name: A
 .OBJ:
   .fields:
-    q: 12
     x: 5
-  .metaid: '94389695385072'
+  .metaid: '94018109107488'
