@@ -1,0 +1,85 @@
+{
+    ".META": {
+        "139758189583952": {
+            ".code": {
+                "co_argcount": 1,
+                "co_posonlyargcount": 0,
+                "co_kwonlyargcount": 0,
+                "co_nlocals": 1,
+                "co_stacksize": 3,
+                "co_flags": 67,
+                "co_code": [
+                    116,
+                    0,
+                    124,
+                    0,
+                    160,
+                    1,
+                    161,
+                    0,
+                    23,
+                    0,
+                    83,
+                    0
+                ],
+                "co_consts": {
+                    ".list": [
+                        null
+                    ],
+                    ".collection_type": "tuple"
+                },
+                "co_names": {
+                    ".list": [
+                        "aba",
+                        "upper"
+                    ],
+                    ".collection_type": "tuple"
+                },
+                "co_varnames": {
+                    ".list": [
+                        "name"
+                    ],
+                    ".collection_type": "tuple"
+                },
+                "co_freevars": {
+                    ".list": [],
+                    ".collection_type": "tuple"
+                },
+                "co_cellvars": {
+                    ".list": [],
+                    ".collection_type": "tuple"
+                },
+                "co_filename": "<ipython-input-312-b1525c49b0bf>",
+                "co_name": "hello",
+                "co_firstlineno": 3,
+                "co_lnotab": [
+                    0,
+                    1
+                ]
+            },
+            ".metatype": "func",
+            ".name": "hello",
+            ".module": "__main__",
+            ".refs": {
+                ".list": [
+                    {},
+                    {
+                        "aba": "HI "
+                    },
+                    {},
+                    {
+                        ".list": [
+                            "upper"
+                        ],
+                        ".collection_type": "set"
+                    }
+                ],
+                ".collection_type": "tuple"
+            },
+            ".defaults": null
+        }
+    },
+    ".OBJ": {
+        ".metaid": "139758189583952"
+    }
+}

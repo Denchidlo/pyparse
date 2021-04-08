@@ -1,13 +1,13 @@
 import builtins
 import os
-from .pool import *
+
 from datetime import datetime
 import inspect
-from types import FunctionType
+from types import FunctionType, CodeType
 from sys import builtin_module_names, modules
-from lib.packager.objectinspector import *
-from lib.packager.creator import *
-from lib.packager.pool import *
+from packager.objectinspector import *
+from packager.creator import *
+from packager.pool import *
 
 class Packer:
     def pack(self, obj: object, __globals__=globals()):
@@ -30,49 +30,17 @@ class Packer:
         if function_module != None and function_module in builtin_module_names:
             self.metainfo.update({str(obj_id): {".metatype": "builtin func", ".name": obj.__name__, ".module": obj.__module__}})
         else:
-            deconstructed = deconstruct_func(obj)
-            codedump = deconstructed[".code"]
-            refs = deconstructed[".references"]
 
-            nonlocals_ = refs[0]
-            globals_ = refs[1]
-            builtins_ = refs[2]
-            unbounds_ = refs[3]
+            
+            dumped = deconstruct_func(obj)
 
-            deconstructed_refs = {
-                "nonlocals": {},
-                "globals": {},
-                "builtins": {},
-                "unbound": {}
-            }
-                
-            for key in nonlocals_:
-                new_id = id(nonlocals_[key])
-                el = self.dump(nonlocals_[key])
-                deconstructed_refs["nonlocals"][key] = el
-
-            for key in globals_:
-                new_id = id(globals_[key])
-                el = self.dump(globals_[key])
-                deconstructed_refs["globals"][key] = el
-
-            for key in builtins_:
-                new_id = id(builtins_[key])
-                el = self.dump(builtins_[key])
-                deconstructed_refs["builtins"][key] = el
-
-            for key in unbounds_:
-                if key in dir(obj.__module__):
-                    try:
-                        exec(f"from {obj.__module__} import dump__{key}")
-                        new_id = id(builtins_[key])
-                        el = eval(f"dump__{key}")
-                        deconstructed_refs["unbounds"][key] = str(new_id)
-                    except Exception:
-                        continue
+            code_dict = dumped[".code"]
+            code_dict["co_code"] = [el for el in code_dict["co_code"]]
+            code_dict["co_lnotab"] = [el for el in code_dict["co_lnotab"]]
             
             if self.metainfo.get(str(obj_id)) == None:
-                self.metainfo.update({str(obj_id): {".code": get_code(obj), ".metatype": "func", ".name": obj.__name__, ".module": getattr(obj, "__module__", None), ".refs": deconstructed_refs}})\
+                self.metainfo.update({str(obj_id): {".code": self.dump(code_dict), ".metatype": "func", ".name": self.dump(dumped[".name"]), ".module": getattr(obj, "__module__", None), ".refs": self.dump(dumped[".references"]), ".defaults": self.dump(dumped[".defaults"])}})\
+
 
             return {".metaid": str(obj_id)}            
         
@@ -159,6 +127,11 @@ class Packer:
                     
                 data = {key: self.dump(fields[key]) for key in fields}
                 return { ".metaid": str(type_id), ".fields": data}
+
+
+            return None
+                        
+
          
         
 class Unpacker:
@@ -218,26 +191,49 @@ class Unpacker:
                             return eval(f'{src[".name"]}')
                         except Exception:
                             pass
-                    exec(src[".code"])
-                    func = eval(src[".name"])
-                    refs = self.load(src[".refs"])
-                    nonlocals = refs["nonlocals"]
-                    globals_ = refs["globals"]
+
                     
+                    refs = self.load(src[".refs"])
+                    nonlocals = refs[0]
+                    globals_ = refs[1]
+                    
+                    co_raw = self.load(src[".code"])
+
+                    co = CodeType(
+                        co_raw["co_argcount"],
+                        co_raw["co_posonlyargcount"],
+                        co_raw["co_kwonlyargcount"],
+                        co_raw["co_nlocals"],
+                        co_raw["co_stacksize"],
+                        co_raw["co_flags"],
+                        bytes(co_raw["co_code"]),
+                        co_raw["co_consts"],
+                        co_raw["co_names"],
+                        co_raw["co_varnames"],
+                        co_raw["co_filename"],
+                        co_raw["co_name"],
+                        co_raw["co_firstlineno"],
+                        bytes(co_raw["co_lnotab"]),
+                        co_raw["co_freevars"],
+                        co_raw["co_cellvars"]
+                    )   
+
+
                     for el in globals_:
                         if el in globals().keys():
                             continue
                         else:
                             globals()[el] = self.load(globals_[el])
                     
-                    code = func.__code__
-                    closures = tuple(cell_factory(nonlocals[el]) for el in code.co_freevars)
+
+                    closures = tuple(cell_factory(nonlocals[el]) for el in co.co_freevars)
 
                     naked = [
-                        func.__code__,
-                        func.__globals__,
-                        func.__name__,
-                        func.__defaults__,
+                        co,
+                        globals(),
+                        src[".name"],
+                        src[".defaults"],
+
                         closures
                     ]
 
@@ -308,6 +304,6 @@ class Unpacker:
                 res=  {
                     key: self.load(src[key]) for key in src
                 }
+
                 return res
-            
-            
+

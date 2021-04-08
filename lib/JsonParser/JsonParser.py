@@ -1,12 +1,14 @@
 from io import FileIO
 from typing import Any, IO
 from json import dumps, loads
+
 from lib.packager import *
 
 
 class JsonParser:
     base_dumps = dumps
     base_loads = loads
+
 
     def dump(self, obj: object, file: object = None, unpacked=True) -> None:
         if unpacked:
@@ -23,6 +25,7 @@ class JsonParser:
         packed_obj = Packer().pack(obj)
         return JsonParser.base_dumps(packed_obj)
 
+
     def load(self, file: object, unpack=True) -> Any:
         if file:
             with open(file, 'r') as file:
@@ -32,6 +35,7 @@ class JsonParser:
                 return unpacked_obj
             else:
                 return raw_obj
+
         else:
             raise ValueError("File transfer aborted")
 

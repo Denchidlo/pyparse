@@ -106,4 +106,3 @@ def get_code(obj):
         new_lines.append(line)
     return "\n".join(new_lines)
         
-    
