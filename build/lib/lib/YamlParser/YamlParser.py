@@ -6,11 +6,9 @@ from lib.packager import *
 warnings.filterwarnings("ignore")
 
 
-
 class YamlParser:
     base_dumps = dump
     base_loads = load
-
 
     def dump(self, obj: object, file: object = None, unpacked=True):
         if unpacked:

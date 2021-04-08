@@ -1,7 +1,8 @@
 from io import FileIO
 from typing import Any, IO
 from toml import dumps, loads
-from packager import *
+from lib.packager import *
+
 
 class TomlParser:
     base_dumps = dumps
@@ -10,7 +11,8 @@ class TomlParser:
     def dump(self, obj: object, file: object=None) -> None:
         packed_obj = Packer().pack(obj)
         if file:
-            with open(file, 'w+') as file:
+            with open(file, 'w') as file:
+
                 file.write(TomlParser.base_dumps(packed_obj))
         else:
             raise ValueError("File transfer aborted")
@@ -21,7 +23,7 @@ class TomlParser:
 
     def load(self, file: object) -> Any:
         if file:
-            with open(file, 'w+') as file:
+            with open(file, 'r') as file:
                 raw_obj = TomlParser.base_loads(file.read())
             unpacked_obj = Unpacker().unpack(raw_obj)
             return unpacked_obj

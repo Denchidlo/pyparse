@@ -2,9 +2,6 @@ import builtins
 import inspect
 import functools
 import types
-import dis
-import re
-
 
 primitives = set(
     [
@@ -14,11 +11,7 @@ primitives = set(
         str
     ])
 
-
-def is_magicmarked(s: str) -> bool:
-    return re.match("^__(?:\w+)__$", s) != None
-
-
+# Utils
 def is_primitive(obj: object) -> bool:
     return type(obj) in primitives
 
@@ -107,21 +100,21 @@ def deconstruct_class(cls):
     return deconstructed
 
 def deconstruct_func(func):
-
-    code = {el: getattr(func.__code__, el) for el in func.__code__.__dir__() if not is_magicmarked(el) and "co" in el}
-    
-    refs = fetch_funcreferences(func)
-    defaults = func.__defaults__
-    return {'.name': func.__name__, '.code': code, '.references': refs, '.defaults': defaults}
-
+    references = fetch_funcreferences(func)
+    func_code = inspect.getsource(func)
+    return {
+        ".name": func.__name__,
+        ".code": func_code,
+        ".references": references
+    }
 
 def getfields(obj):
     """Try to get as much attributes as possible"""
     members = inspect.getmembers(obj)
-
+    
     cls = type(obj)
     type_attrnames = [el.name for el in inspect.classify_class_attrs(cls)]
-
+    
     result = {}
     
     for member in members:
@@ -133,7 +126,4 @@ def getfields(obj):
 def deconstruct_instance(obj):
     type_ = type(obj)
     fields = getfields(obj)
-
-    
     return (type_, fields)
-
