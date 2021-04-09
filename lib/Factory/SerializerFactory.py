@@ -1,7 +1,7 @@
-from JsonParser import JsonParser
-from TomlParser import TomlParser
-from YamlParser import YamlParser
-from PickleParser import PickleParser
+from lib.JsonParser import JsonParser
+from lib.TomlParser import TomlParser
+from lib.YamlParser import YamlParser
+from lib.PickleParser import PickleParser
 
 
 class SerializerFactory:

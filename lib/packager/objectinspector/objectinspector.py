@@ -2,6 +2,8 @@ import builtins
 import inspect
 import functools
 import types
+import dis
+import re
 
 primitives = set(
     [
@@ -11,9 +13,14 @@ primitives = set(
         str
     ])
 
-# Utils
+
+def is_magicmarked(s: str) -> bool:
+    return re.match("^__(?:\w+)__$", s) != None
+
+
 def is_primitive(obj: object) -> bool:
     return type(obj) in primitives
+
 
 def is_basetype(obj: object) -> bool:
     for el in primitives:
@@ -24,19 +31,22 @@ def is_basetype(obj: object) -> bool:
             return True
     return False
 
+
 def is_instance(obj):
     if not hasattr(obj, '__dict__'):
         return False
-    if inspect.isroutine(obj): 
+    if inspect.isroutine(obj):
         return False
     if inspect.isclass(obj):
         return False
     else:
         return True
 
+
 def is_none(obj: object) -> bool:
     return obj is None
-    
+
+
 def fetch_typereferences(cls):
     if inspect.isclass(cls):
         mro = inspect.getmro(cls)
@@ -47,7 +57,8 @@ def fetch_typereferences(cls):
             return class_bases[1:-1], metamro[0]
         else:
             return class_bases[1:-1], None
-            
+
+
 def fetch_funcreferences(func: object):
     if inspect.ismethod(func):
         func = func.__func__
@@ -60,9 +71,9 @@ def fetch_funcreferences(func: object):
         nonlocal_vars = {}
     else:
         nonlocal_vars = {
-            var : cell.cell_contents
+            var: cell.cell_contents
             for var, cell in zip(code.co_freevars, func.__closure__)
-       }
+        }
 
     global_ns = func.__globals__
     builtin_ns = global_ns.get("__builtins__", builtins.__dict__)
@@ -83,8 +94,9 @@ def fetch_funcreferences(func: object):
                 unbound_names.add(name)
 
     return (nonlocal_vars, global_vars,
-                       builtin_vars, unbound_names)
-            
+            builtin_vars, unbound_names)
+
+
 def deconstruct_class(cls):
     attributes = inspect.classify_class_attrs(cls)
     deconstructed = []
@@ -99,31 +111,33 @@ def deconstruct_class(cls):
             ))
     return deconstructed
 
+
 def deconstruct_func(func):
-    references = fetch_funcreferences(func)
-    func_code = inspect.getsource(func)
-    return {
-        ".name": func.__name__,
-        ".code": func_code,
-        ".references": references
-    }
+    code = {el: getattr(func.__code__, el) for el in func.__code__.__dir__() if not is_magicmarked(el) and "co" in el}
+
+    refs = fetch_funcreferences(func)
+    defaults = func.__defaults__
+    return {'.name': func.__name__, '.code': code, '.references': refs, '.defaults': defaults}
+
 
 def getfields(obj):
     """Try to get as much attributes as possible"""
     members = inspect.getmembers(obj)
-    
+
     cls = type(obj)
     type_attrnames = [el.name for el in inspect.classify_class_attrs(cls)]
-    
+
     result = {}
-    
+
     for member in members:
         if not member[0] in type_attrnames:
             result[member[0]] = member[1]
-            
+
     return result
+
 
 def deconstruct_instance(obj):
     type_ = type(obj)
     fields = getfields(obj)
+
     return (type_, fields)

@@ -1,16 +1,20 @@
 from io import FileIO
 from typing import Any, IO
 from pickle import dumps, loads
-from packager import *
+
+from lib.packager import *
+
 
 class PickleParser:
     base_dumps = dumps
     base_loads = loads
 
-    def dump(self, obj: object, file: object=None) -> None:
+    def dump(self, obj: object, file: object = None) -> None:
         packed_obj = Packer().pack(obj)
         if file:
-            with open(file, 'w+') as file:
+
+            with open(file, 'w') as file:
+
                 file.write(PickleParser.base_dumps(packed_obj))
         else:
             raise ValueError("File transfer aborted")
@@ -21,7 +25,9 @@ class PickleParser:
 
     def load(self, file: object) -> Any:
         if file:
-            with open(file, 'w+') as file:
+
+            with open(file, 'r') as file:
+
                 raw_obj = PickleParser.base_loads(file.read())
             unpacked_obj = Unpacker().unpack(raw_obj)
             return unpacked_obj

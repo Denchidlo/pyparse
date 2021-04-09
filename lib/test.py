@@ -1,15 +1,50 @@
 import Serializer
 
+
+import json
+import yaml
+
+
 serializer = Serializer.Serializer()
 serializer.change_form('json')
 
-ar = [serializer, {"12": 45}]
-serializer.data = ar
 
-serializer.dumps()
 
-print(serializer.string)
+class A():
+    def __init__(self):
+        self.x = 5
 
-serializer.loads()
 
-print(serializer.data)
+a = A()
+# a.b = 12
+
+b = [12, 23, "333"]
+
+
+def c():
+    print(b)
+
+
+def fun():
+    print(a)
+
+
+serializer.data = a
+serializer.dump('j.json')
+
+serializer.load('j.json', False)
+
+loaded = serializer.data
+
+print(loaded)
+
+serializer2 = Serializer.Serializer()
+serializer2.change_form('yaml')
+serializer2.data = loaded
+serializer2.dump('y.yaml', False)
+
+serializer2.load('y.yaml', True)
+
+yaml_loaded = serializer2.data
+
+print(loaded)
