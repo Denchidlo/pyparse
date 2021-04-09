@@ -53,7 +53,7 @@ class Packer:
         if is_primitive(obj):
             return obj
         
-        if type(obj) in [list, set, tuple, dict]:
+        if type(obj) in [list, set, tuple, dict, frozenset]:
             if isinstance(obj, dict):
                 result = {key:self.dump(obj[key]) for key in obj}
             elif type(obj) in [set, tuple]:
@@ -297,6 +297,8 @@ class Unpacker:
                     return tuple(el for el in self.load(src[".list"]))
                 elif src[".collection_type"] == "set":
                     return set(el for el in self.load(src[".list"]))
+                elif src[".collection_type"] == "frozenset":
+                    return frozenset(el for el in self.load(src[".list"]))
                 else:
                     return self.load(src[".list"])
             
