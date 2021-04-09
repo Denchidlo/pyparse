@@ -62,7 +62,7 @@ class Packer:
         if type(obj) in [list, set, tuple, dict, frozenset]:
             if isinstance(obj, dict):
                 result = {key: self.dump(obj[key]) for key in obj}
-            elif type(obj) in [set, tuple]:
+            elif type(obj) in [frozenset, set, tuple]:
                 result = {".list": [self.dump(el) for el in obj], ".collection_type": f"{obj.__class__.__name__}"}
             else:
                 result = [self.dump(el) for el in obj]
