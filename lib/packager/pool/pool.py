@@ -3,21 +3,24 @@ from time import sleep
 
 import threading
 
+
 def thread_local(func):
     def lock_func(self, *args, **kwargs):
         context_id = threading.currentThread().native_id
         self_contextid = getattr(self, "__lockedby__", None)
-        if  self_contextid == None or self_contextid == context_id:
+        if self_contextid == None or self_contextid == context_id:
             func(self, *args, **kwargs)
         else:
             raise threading.ThreadError("Object is locked by another thread")
+
     return lock_func
+
 
 def instancelock(func):
     def lock_func(self, *args, **kwargs):
         context_id = threading.currentThread().native_id
         self_contextid = getattr(self, "__lockedby__", None)
-        if  self_contextid == None:
+        if self_contextid == None:
             setattr(self, "__lockedby__", context_id)
             return func(self, *args, **kwargs)
             setattr(self, "__lockedby__", None)
@@ -25,7 +28,9 @@ def instancelock(func):
             return func(self, *args, **kwargs)
         else:
             raise threading.ThreadError("Object is locked by another thread")
+
     return lock_func
+
 
 class PoolInstancer(type):
     def __new__(cls, *args):
@@ -37,7 +42,7 @@ class PoolInstancer(type):
         else:
             type_.__new__ = PoolInstancer._poolnew(type_.__new__, True)
         return type_
-            
+
     @staticmethod
     def _poolnew(func, is_implicit: bool):
         def new(cls, *args, **kwargs):
@@ -63,4 +68,5 @@ class PoolInstancer(type):
             obj = free_objects[-1]
             cls.__inrealloc__ = False
             return obj
+
         return new

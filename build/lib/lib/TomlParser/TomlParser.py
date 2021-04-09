@@ -3,6 +3,7 @@ from typing import Any, IO
 from toml import dumps, loads
 from lib.packager import *
 
+
 class TomlParser:
     base_dumps = dumps
     base_loads = loads
@@ -11,6 +12,7 @@ class TomlParser:
         packed_obj = Packer().pack(obj)
         if file:
             with open(file, 'w') as file:
+
                 file.write(TomlParser.base_dumps(packed_obj))
         else:
             raise ValueError("File transfer aborted")

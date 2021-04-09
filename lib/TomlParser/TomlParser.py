@@ -8,7 +8,7 @@ class TomlParser:
     base_dumps = dumps
     base_loads = loads
 
-    def dump(self, obj: object, file: object=None) -> None:
+    def dump(self, obj: object, file: object = None) -> None:
         packed_obj = Packer().pack(obj)
         if file:
             with open(file, 'w') as file:

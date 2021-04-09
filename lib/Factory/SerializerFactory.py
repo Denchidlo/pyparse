@@ -4,7 +4,6 @@ from lib.YamlParser import YamlParser
 from lib.PickleParser import PickleParser
 
 
-
 class SerializerFactory:
     def __init__(self):
         self._creators = {}
