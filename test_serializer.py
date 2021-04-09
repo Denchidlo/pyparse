@@ -40,14 +40,12 @@ class TestPrimesJson:
         ser.change_form('json')
         ser.string = '{".time": "2021-04-10T00:00:00"}'
         ser.loads()
-        print(ser.data)
         assert ser.data == sample_datetime
 
     def test_None(self):
         ser.change_form('json')
         ser.string = 'null'
         ser.loads()
-        print(ser.data)
         assert ser.data == sample_None
 
     def test_dict(self):
@@ -145,3 +143,160 @@ class TestClassesJson:
         f = ser.data()
         assert f.BAR == "bip"
 
+
+class TestPackUnpackJson:
+    def test_tuple(self):
+        ser.change_form('json')
+        ser.data = sample_tuple
+        ser.dumps()
+        ser.loads()
+        assert ser.data == sample_tuple
+
+    def test_int(self):
+        ser.change_form('json')
+        ser.data = sample_int
+        ser.dumps()
+        ser.loads()
+        assert ser.data == sample_int
+
+    def test_float(self):
+        ser.change_form('json')
+        ser.data = sample_float
+        ser.dumps()
+        ser.loads()
+        assert math.isclose(ser.data, sample_float)
+
+    def test_bool(self):
+        ser.change_form('json')
+        ser.data = sample_bool
+        ser.dumps()
+        ser.loads()
+        assert ser.data == sample_bool
+
+    def test_string(self):
+        ser.change_form('json')
+        ser.data = sample_string
+        ser.dumps()
+        ser.loads()
+        assert ser.data == sample_string
+
+    def test_datetime(self):
+        ser.change_form('json')
+        ser.data = sample_datetime
+        ser.dumps()
+        ser.loads()
+        assert ser.data == sample_datetime
+
+    def test_None(self):
+        ser.change_form('json')
+        ser.data = sample_None
+        ser.dumps()
+        ser.loads()
+        assert ser.data == sample_None
+
+    def test_dict(self):
+        ser.change_form('json')
+        ser.data = sample_dict
+        ser.dumps()
+        ser.loads()
+        assert isinstance(ser.data, dict)
+        assert ser.data["123445"] == sample_bool
+        assert ser.data[sample_string] == sample_tuple
+
+    def test_list(self):
+        ser.change_form('json')
+        ser.data = sample_list
+        ser.dumps()
+        ser.loads()
+        assert ser.data == sample_list
+
+    def test_set(self):
+        ser.change_form('json')
+        ser.data = sample_set
+        ser.dumps()
+        ser.loads()
+        assert isinstance(ser.data, set)
+        assert len(ser.data) == 5
+        for i in sample_set:
+            assert i in ser.data
+
+    def test_frozenset(self):
+        ser.change_form('json')
+        ser.data = sample_frozenset
+        ser.dumps()
+        ser.loads()
+        assert isinstance(ser.data, frozenset)
+        assert len(ser.data) == 3
+        for i in sample_frozenset:
+            assert i in ser.data
+
+    def test_func(self):
+        ser.change_form('json')
+        ser.data = sample_func
+        ser.dumps()
+        ser.loads()
+        assert math.isclose(ser.data(2.4), 1.008)
+
+    def test_fibonacci(self):
+        ser.change_form('json')
+        ser.data = sample_fibonacci
+        ser.dumps()
+        ser.loads()
+        assert ser.data(7) == 21
+
+    def test_lambda(self):
+        ser.change_form('json')
+        ser.data = sample_lambda
+        ser.dumps()
+        ser.loads()
+        assert math.isclose(ser.data(1.6), 4.096)
+
+    def test_inner_func(self):
+        ser.change_form('json')
+        ser.data = sample_inner_func
+        ser.dumps()
+        ser.loads()
+        assert math.isclose(ser.data(1.99), 37643.98251178124)
+
+    def test_class_A(self):
+        ser.change_form('json')
+        ser.data = A
+        ser.dumps()
+        ser.loads()
+        instance = ser.data()
+        assert ser.data.__name__ == 'A'
+        assert type(ser.data) == type
+        assert instance.x == 12
+
+    def test_class_B(self):
+        ser.change_form('json')
+        ser.data = B
+        ser.dumps()
+        ser.loads()
+        instance = ser.data()
+        assert ser.data.__name__ == 'B'
+        assert type(ser.data) == type
+        assert instance.non_static() == "hey from self method"
+        assert ser.data.static() == "hello from static method"
+
+    def test_class_C(self):
+        ser.change_form('json')
+        ser.data = C
+        ser.dumps()
+        ser.loads()
+        instance = ser.data(lambda x: x + x)
+        assert ser.data.__name__ == 'C'
+        assert ser.data.__base__.__name__ == 'A'
+        assert type(ser.data) == type
+        assert instance.x == 12
+        assert instance.prop("42") == "4242"
+
+    def test_class_Foo(self):
+        ser.change_form('json')
+        ser.data = Foo
+        ser.dumps()
+        ser.loads()
+        assert not hasattr(ser.data, 'bar')
+        assert hasattr(ser.data, 'BAR')
+        f = ser.data()
+        assert f.BAR == "bip"
