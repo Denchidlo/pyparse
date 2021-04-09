@@ -21,6 +21,13 @@ def sample_func(n):
     return sample_float * n
 
 
+def sample_generator():
+    val = 1
+    for i in range(10):
+        yield val
+        val += 1
+
+
 def sample_fibonacci(n):
     if n == 1 or n == 0:
         return 1

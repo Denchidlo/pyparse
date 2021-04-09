@@ -9,12 +9,13 @@ class PickleParser:
     base_dumps = dumps
     base_loads = loads
 
-    def dump(self, obj: object, file: object = None) -> None:
-        packed_obj = Packer().pack(obj)
+    def dump(self, obj: object, file: object = None, unpacked=True) -> None:
+        if unpacked:
+            packed_obj = Packer().pack(obj)
+        else:
+            packed_obj = obj
         if file:
-
             with open(file, 'w') as file:
-
                 file.write(PickleParser.base_dumps(packed_obj))
         else:
             raise ValueError("File transfer aborted")
@@ -23,14 +24,15 @@ class PickleParser:
         packed_obj = Packer().pack(obj)
         return PickleParser.base_dumps(packed_obj)
 
-    def load(self, file: object) -> Any:
+    def load(self, file: object, unpack=True) -> Any:
         if file:
-
             with open(file, 'r') as file:
-
                 raw_obj = PickleParser.base_loads(file.read())
-            unpacked_obj = Unpacker().unpack(raw_obj)
-            return unpacked_obj
+            if unpack:
+                unpacked_obj = Unpacker().unpack(raw_obj)
+                return unpacked_obj
+            else:
+                return raw_obj
         else:
             raise ValueError("File transfer aborted")
 

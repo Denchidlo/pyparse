@@ -4,8 +4,8 @@ setup(
     name='lib',
 
     packages=['lib', 'lib/Factory', 'lib/JsonParser', 'lib/packager', 'lib/YamlParser',
-              'lib/TomlParser', 'lib/PickleParser'],
-    version='0.2.1',
+              'lib/packager/creator', 'lib/packager/objectinspector', 'lib/PickleParser'],
+    version='0.2.2',
 
     description='Serializer/Deserializer',
     author='Me',

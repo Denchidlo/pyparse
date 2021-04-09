@@ -7,11 +7,10 @@ from types import FunctionType, CodeType
 from sys import builtin_module_names, modules
 from lib.packager.objectinspector import *
 from lib.packager.creator import *
-from lib.packager.pool import *
 
 
 class Packer:
-    def pack(self, obj: object, __globals__=globals()):
+    def pack(self, obj: object):
         self.metainfo = {}
         self.proceeded = []
         dump = self.dump(obj)
