@@ -3,14 +3,13 @@ import warnings
 from typing import Any, IO
 from yaml import dump, load
 from lib.packager import *
-warnings.filterwarnings("ignore")
 
+warnings.filterwarnings("ignore")
 
 
 class YamlParser:
     base_dumps = dump
     base_loads = load
-
 
     def dump(self, obj: object, file: object = None, unpacked=True):
         if unpacked:

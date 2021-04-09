@@ -1,9 +1,10 @@
 import inspect
 
+
 class AbstractMetaclass():
     @staticmethod
     def create(name, mro):
-        globals().update({el.__name__:el for el in mro[0]})
+        globals().update({el.__name__: el for el in mro[0]})
         if len(mro[0]) != 0:
             bases = ",".join([base.__name__ for base in mro[0]])
         else:
@@ -12,33 +13,36 @@ class AbstractMetaclass():
         metaclass = eval(f"{name}")
         return metaclass
 
+
 class AbstractClass():
     @staticmethod
     def create(name, mro):
-        globals().update({el.__name__:el for el in mro[0]})
-        globals().update({mro[1].__name__:mro[1]})
+        globals().update({el.__name__: el for el in mro[0]})
+        globals().update({mro[1].__name__: mro[1]})
         if len(mro[0]) != 0:
             bases = ",".join([base.__name__ for base in mro[0]])
         else:
             bases = ""
         if mro[1]:
-            meta = "metaclass="+mro[1].__name__
+            meta = "metaclass=" + mro[1].__name__
         else:
             meta = ""
         if bases != "":
-            str_ = bases + ", "+ meta
+            str_ = bases + ", " + meta
         else:
             str_ = meta
         exec(f"class {name}({str_}):\n\tpass")
         _class = eval(f"{name}")
         return _class
 
+
 def create_classbase(name, mro=None):
     if mro[1]:
         template = AbstractClass.create(name, mro)
-    else: 
+    else:
         template = AbstractMetaclass.create(name, mro)
     return template
+
 
 def set_classattrs(cls, attributes=None):
     if attributes:
@@ -54,12 +58,12 @@ def set_classattrs(cls, attributes=None):
                 except AttributeError:
                     continue
     return cls
-    
-    
+
+
 def create_class(name, mro=None, attributes=None):
     if mro[1]:
         template = AbstractClass.create(name, mro)
-    else: 
+    else:
         template = AbstractMetaclass.create(name, mro)
     if attributes:
         for el in attributes:
@@ -76,18 +80,23 @@ def create_class(name, mro=None, attributes=None):
                 except AttributeError:
                     continue
     return template
-    
+
+
 def create_instance(type_, fields):
     instance = type_.__new__(type_)
     for el in fields:
         setattr(instance, el, fields[el])
     return instance
 
+
 def cell_factory(el):
     inner = el
+
     def _f():
         return el
+
     return _f.__closure__[0]
+
 
 def get_code(obj):
     lines = inspect.getsourcelines(obj)[0]
@@ -105,4 +114,3 @@ def get_code(obj):
             pass
         new_lines.append(line)
     return "\n".join(new_lines)
-        

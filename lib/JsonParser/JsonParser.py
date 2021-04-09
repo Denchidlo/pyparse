@@ -9,7 +9,6 @@ class JsonParser:
     base_dumps = dumps
     base_loads = loads
 
-
     def dump(self, obj: object, file: object = None, unpacked=True) -> None:
         if unpacked:
             packed_obj = Packer().pack(obj)
@@ -24,7 +23,6 @@ class JsonParser:
     def dumps(self, obj: object) -> None:
         packed_obj = Packer().pack(obj)
         return JsonParser.base_dumps(packed_obj)
-
 
     def load(self, file: object, unpack=True) -> Any:
         if file:

@@ -1,9 +1,13 @@
 import Serializer
+
+
 import json
 import yaml
 
+
 serializer = Serializer.Serializer()
 serializer.change_form('json')
+
 
 
 class A():
@@ -25,7 +29,7 @@ def fun():
     print(a)
 
 
-serializer.data = c
+serializer.data = a
 serializer.dump('j.json')
 
 serializer.load('j.json', False)
@@ -39,8 +43,8 @@ serializer2.change_form('yaml')
 serializer2.data = loaded
 serializer2.dump('y.yaml', False)
 
-serializer2.load('y.yaml')
+serializer2.load('y.yaml', True)
 
 yaml_loaded = serializer2.data
-yaml_loaded()
-# print(loaded)
+
+print(loaded)
