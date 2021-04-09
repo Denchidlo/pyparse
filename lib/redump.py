@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import argparse
-from lib.Serializer import Serializer
+import Serializer
 
 
 def redump(inf, outf, outform):

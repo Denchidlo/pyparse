@@ -2,7 +2,7 @@ from io import FileIO
 import warnings
 from typing import Any, IO
 from yaml import dump, load
-from lib.packager import *
+from packager import *
 
 warnings.filterwarnings("ignore")
 

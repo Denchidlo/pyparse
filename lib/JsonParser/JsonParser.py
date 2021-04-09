@@ -2,7 +2,7 @@ from io import FileIO
 from typing import Any, IO
 from json import dumps, loads
 
-from lib.packager import *
+from packager import *
 
 
 class JsonParser:

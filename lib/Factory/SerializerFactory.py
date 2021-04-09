@@ -1,7 +1,5 @@
-from lib.JsonParser import JsonParser
-from lib.TomlParser import TomlParser
-from lib.YamlParser import YamlParser
-from lib.PickleParser import PickleParser
+from JsonParser import JsonParser
+from YamlParser import YamlParser
 
 
 class SerializerFactory:
@@ -21,6 +19,4 @@ class SerializerFactory:
 factory = SerializerFactory()
 
 factory.create_serializer('JSON', JsonParser.JsonParser)
-factory.create_serializer('Toml', TomlParser.TomlParser)
 factory.create_serializer('Yaml', YamlParser.YamlParser)
-factory.create_serializer('Pickle', PickleParser.PickleParser)
