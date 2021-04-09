@@ -2,3 +2,5 @@ __pycache__
 trash
 sandbox.py
 .ipynb_checkpoints
+/lib.egg-info
+/build

@@ -1,7 +1,0 @@
-lib
-lib/Factory
-lib/JsonParser
-lib/PickleParser
-lib/TomlParser
-lib/YamlParser
-lib/packager
