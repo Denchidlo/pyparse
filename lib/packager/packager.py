@@ -305,6 +305,10 @@ class Unpacker:
                 else:
                     return self.load(src[".list"])
 
+            elif src.get(".time"):
+                date = datetime.fromisoformat(src[".time"])
+                return date
+
             else:
                 res = {
                     key: self.load(src[key]) for key in src
