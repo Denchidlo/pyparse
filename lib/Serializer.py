@@ -1,4 +1,4 @@
-from Factory import SerializerFactory
+from lib.Factory import SerializerFactory
 
 
 class Serializer:
