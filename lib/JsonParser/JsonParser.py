@@ -1,8 +1,8 @@
-from io import FileIO
-from typing import Any, IO
-from json import dumps, loads
+from io import FileIO # pragma: no cover
+from typing import Any, IO # pragma: no cover
+from json import dumps, loads # pragma: no cover
 
-from lib.packager import *
+from lib.packager import * # pragma: no cover
 
 
 class JsonParser:
@@ -17,7 +17,7 @@ class JsonParser:
         if file:
             with open(file, 'w') as file:
                 file.write(JsonParser.base_dumps(packed_obj))
-        else:
+        else: # pragma: no cover
             raise ValueError("File transfer aborted")
 
     def dumps(self, obj: object) -> None:
@@ -34,7 +34,7 @@ class JsonParser:
             else:
                 return raw_obj
 
-        else:
+        else: # pragma: no cover
             raise ValueError("File transfer aborted")
 
     def loads(self, json: str) -> Any:

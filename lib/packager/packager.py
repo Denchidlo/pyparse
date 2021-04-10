@@ -1,12 +1,12 @@
-import builtins
-import os
+import builtins # pragma: no cover
+import os # pragma: no cover
 
-from datetime import datetime
-import inspect
+from datetime import datetime # pragma: no cover
+import inspect # pragma: no cover
 from types import FunctionType, CodeType
 from sys import builtin_module_names, modules
-from lib.packager.objectinspector import *
-from lib.packager.creator import *
+from lib.packager.objectinspector import * # pragma: no cover
+from lib.packager.creator import * # pragma: no cover
 
 
 class Packer:
@@ -75,7 +75,7 @@ class Packer:
         elif not getattr(obj, "__name__", None) in dir(builtins):
             self.proceeded.append(obj_id)
 
-        if inspect.ismodule(obj):
+        if inspect.ismodule(obj): # pragma: no cover
             try:
                 if self.metainfo.get(str(obj_id)) == None:
                     if obj.__name__ in builtin_module_names:

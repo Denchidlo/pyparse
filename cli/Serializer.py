@@ -2,10 +2,10 @@ from Factory import SerializerFactory
 
 
 class Serializer:
-    def __init__(self):
+    def __init__(self, default_form="json"):
         self.string = None
         self.data = None
-        self.form = None
+        self.form = default_form
 
     def change_form(self, new_form):
         if self.form == new_form:

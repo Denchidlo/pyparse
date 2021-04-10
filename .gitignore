@@ -5,3 +5,5 @@ sandbox.py
 /lib.egg-info
 /build
 /venv
+.coverage
+sandbox2.py
