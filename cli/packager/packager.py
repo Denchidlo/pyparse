@@ -5,8 +5,8 @@ from datetime import datetime
 import inspect
 from types import FunctionType, CodeType
 from sys import builtin_module_names, modules
-from lib.packager.objectinspector import *
-from lib.packager.creator import *
+from packager.objectinspector import *
+from packager.creator import *
 
 
 class Packer:

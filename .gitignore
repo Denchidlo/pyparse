@@ -4,3 +4,4 @@ sandbox.py
 .ipynb_checkpoints
 /lib.egg-info
 /build
+/venv
