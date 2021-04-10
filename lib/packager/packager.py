@@ -87,7 +87,7 @@ class Packer:
                 self.metainfo.update({str(obj_id): {".metatype": "module", ".name": obj.__name__}})
             return {".metaid": str(obj_id)}
 
-        if getattr(obj, "__name__", None) and not is_basetype(obj):
+        if getattr(obj, "__name__", None) and not is_basetype(obj): # pragma: no cover
             if obj.__name__ in dir(builtins):
                 try:
                     self.proceeded.remove(str(obj_id))
@@ -98,12 +98,12 @@ class Packer:
             if inspect.ismethod(obj) or inspect.isfunction(obj) or isinstance(obj, staticmethod):
                 return self.funcdump(obj)
 
-            if inspect.isbuiltin(obj):
+            if inspect.isbuiltin(obj): 
                 self.metainfo.update(
                     {str(obj_id): {".metatype": "builtin-func", ".module": obj.__module__, ".name": obj.__name__}})
                 return {".metaid": str(obj_id)}
 
-            if is_instance(obj):
+            if is_instance(obj): # pragma: no cover
                 type_, fields = deconstruct_instance(obj)
                 type_id = id(type_)
                 self.dump(type_)
@@ -136,7 +136,7 @@ class Packer:
                 data = {key: self.dump(fields[key]) for key in fields}
                 return {".metaid": str(type_id), ".fields": data}
 
-            return None
+            return None # pragma: no cover
 
 
 class Unpacker:
@@ -242,7 +242,7 @@ class Unpacker:
                     func = FunctionType(*naked)
                     return func
 
-                if metatype == "builtin-func":
+                if metatype == "builtin-func": # pragma: no cover
                     try:
                         exec(f'from {src[".module"]} import {src[".name"]}')
                         return eval(f'{src[".name"]}')
@@ -268,7 +268,7 @@ class Unpacker:
 
                     return set_classattrs(cls, attrs)
 
-                elif metatype == "module":
+                elif metatype == "module": # pragma: no cover
                     try:
                         exec(f'import {src[".name"]}')
                         result = eval(src[".name"])
@@ -285,7 +285,7 @@ class Unpacker:
                             return result
                     raise KeyError(f'module"{src[".module"]}" import failed')
 
-                elif metatype == "builtin":
+                elif metatype == "builtin": # pragma: no cover
                     if src.get(".builtin"):
                         return getattr(builtins, src[".builtin"])
                     else:

@@ -1,9 +1,6 @@
-import inspect
-
-
 class AbstractMetaclass():
     @staticmethod
-    def create(name, mro):
+    def create(name, mro): # pragma: no cover
         globals().update({el.__name__: el for el in mro[0]})
         if len(mro[0]) != 0:
             bases = ",".join([base.__name__ for base in mro[0]])
@@ -16,7 +13,7 @@ class AbstractMetaclass():
 
 class AbstractClass():
     @staticmethod
-    def create(name, mro):
+    def create(name, mro): # pragma: no cover
         globals().update({el.__name__: el for el in mro[0]})
         globals().update({mro[1].__name__: mro[1]})
         if len(mro[0]) != 0:
@@ -44,7 +41,7 @@ def create_classbase(name, mro=None):
     return template
 
 
-def set_classattrs(cls, attributes=None):
+def set_classattrs(cls, attributes=None): # pragma: no cover
     if attributes:
         for el in attributes:
             if el[1] != None:
@@ -53,14 +50,14 @@ def set_classattrs(cls, attributes=None):
                         setattr(cls, el[0], staticmethod(el[1]))
                     elif el[2] == "class method":
                         setattr(cls, el[0], classmethod(el[1]))
-                    else:
+                    else: # pragma: no cover
                         setattr(cls, el[0], el[1])
-                except AttributeError:
+                except AttributeError: # pragma: no cover
                     continue
     return cls
 
 
-def create_class(name, mro=None, attributes=None):
+def create_class(name, mro=None, attributes=None): # pragma: no cover
     if mro[1]:
         template = AbstractClass.create(name, mro)
     else:
@@ -82,14 +79,14 @@ def create_class(name, mro=None, attributes=None):
     return template
 
 
-def create_instance(type_, fields):
+def create_instance(type_, fields): # pragma: no cover
     instance = type_.__new__(type_)
     for el in fields:
         setattr(instance, el, fields[el])
     return instance
 
 
-def cell_factory(el):
+def cell_factory(el): # pragma: no cover
     inner = el
 
     def _f():
@@ -98,7 +95,7 @@ def cell_factory(el):
     return _f.__closure__[0]
 
 
-def get_code(obj):
+def get_code(obj): # pragma: no cover
     lines = inspect.getsourcelines(obj)[0]
     tabs = 0
     for ch in lines[0]:

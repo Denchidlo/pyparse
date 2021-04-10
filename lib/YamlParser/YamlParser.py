@@ -7,7 +7,7 @@ from lib.packager import *
 warnings.filterwarnings("ignore")
 
 
-class YamlParser:
+class YamlParser: # pragma: no cover
     base_dumps = dump
     base_loads = load
 

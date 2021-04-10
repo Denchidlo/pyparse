@@ -1,8 +1,5 @@
 import builtins
 import inspect
-import functools
-import types
-import dis
 import re
 
 primitives = set(
@@ -14,15 +11,15 @@ primitives = set(
     ])
 
 
-def is_magicmarked(s: str) -> bool:
+def is_magicmarked(s: str) -> bool:  
     return re.match("^__(?:\w+)__$", s) != None
 
 
-def is_primitive(obj: object) -> bool:
+def is_primitive(obj: object) -> bool: 
     return type(obj) in primitives
 
 
-def is_basetype(obj: object) -> bool:
+def is_basetype(obj: object) -> bool: 
     for el in primitives:
         if el.__name__ == obj.__name__:
             return True
@@ -32,7 +29,7 @@ def is_basetype(obj: object) -> bool:
     return False
 
 
-def is_instance(obj):
+def is_instance(obj): # pragma: no cover
     if not hasattr(obj, '__dict__'):
         return False
     if inspect.isroutine(obj):
@@ -53,21 +50,21 @@ def fetch_typereferences(cls):
         metamro = inspect.getmro(type(cls))
         metamro = tuple(cls for cls in metamro if cls not in (type, object))
         class_bases = mro
-        if not type in mro and len(metamro) != 0:
+        if not type in mro and len(metamro) != 0: # pragma: no cover
             return class_bases[1:-1], metamro[0]
-        else:
+        else: # pragma: no cover
             return class_bases[1:-1], None
 
 
-def fetch_funcreferences(func: object):
+def fetch_funcreferences(func: object): # pragma: no cover
     if inspect.ismethod(func):
         func = func.__func__
 
-    if not inspect.isfunction(func):
+    if not inspect.isfunction(func): # pragma: no cover
         raise TypeError("{!r} is not a Python function".format(func))
 
     code = func.__code__
-    if func.__closure__ is None:
+    if func.__closure__ is None: # pragma: no cover
         nonlocal_vars = {}
     else:
         nonlocal_vars = {
@@ -82,7 +79,7 @@ def fetch_funcreferences(func: object):
     global_vars = {}
     builtin_vars = {}
     unbound_names = set()
-    for name in code.co_names:
+    for name in code.co_names: # pragma: no cover
         if name in ("None", "True", "False"):
             continue
         try:
@@ -97,11 +94,11 @@ def fetch_funcreferences(func: object):
             builtin_vars, unbound_names)
 
 
-def deconstruct_class(cls):
+def deconstruct_class(cls):  
     attributes = inspect.classify_class_attrs(cls)
     deconstructed = []
     for attr in attributes:
-        if attr.defining_class == object or attr.defining_class == type or attr.name in ["__dict__", "__weakref__"]:
+        if attr.defining_class == object or attr.defining_class == type or attr.name in ["__dict__", "__weakref__"]: # pragma: no cover
             continue
         else:
             deconstructed.append((
@@ -120,7 +117,7 @@ def deconstruct_func(func):
     return {'.name': func.__name__, '.code': code, '.references': refs, '.defaults': defaults}
 
 
-def getfields(obj):
+def getfields(obj): # pragma: no cover
     """Try to get as much attributes as possible"""
     members = inspect.getmembers(obj)
 
@@ -136,7 +133,7 @@ def getfields(obj):
     return result
 
 
-def deconstruct_instance(obj):
+def deconstruct_instance(obj): # pragma: no cover
     type_ = type(obj)
     fields = getfields(obj)
 
