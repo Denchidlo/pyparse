@@ -1,5 +1,5 @@
-from lib.JsonParser import JsonParser
-from lib.YamlParser import YamlParser
+from JsonParser import JsonParser
+from YamlParser import YamlParser
 
 
 class SerializerFactory:
