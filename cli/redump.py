@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-import Serializer
+from Factory.SerializerFactory import get_serializer
 
 
 def redump(inf, outf, outform):
@@ -8,21 +8,14 @@ def redump(inf, outf, outform):
         pass
     elif inf.endswith('.yaml') and outform == 'YAML':
         pass
-    elif inf.endswith('.pkl') and outform == 'PICKLE':
-        pass
     else:
-        serial = Serializer.Serializer()
         if inf.endswith('.json'):
-            serial.form = 'JSON'
+            serial = get_serializer("json")
         elif inf.endswith('.yaml'):
-            serial.form = 'Yaml'
-        elif inf.endswith('.pkl'):
-            serial.form = 'Pickle'
-        serial.load(inf, False)
-        data = serial.data
-        serial.change_form(outform)
-        serial.data = data
-        serial.dump(outf, False)
+            serial = get_serializer("yaml")
+        obj = serial.load(inf, False)
+        serial = get_serializer(outform)
+        serial.dump(obj, outf, False)
 
 
 parser = argparse.ArgumentParser(description='Parser')

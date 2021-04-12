@@ -1,20 +1,27 @@
-from lib import Serializer
+from lib.Factory.SerializerFactory import get_serializer
 from tests.sample_objects import *
 import math
 
-ser = Serializer.Serializer()
-ser.change_form('json')
+
+def test_invalid_format():
+    try:
+        ser = get_serializer("invalid")
+    except Exception as err:
+        assert type(err) == ValueError
+
+
+ser = get_serializer("json")
 
 
 class TestPrimesJson:
     def test_tuple(self):
         ser.string = '{".list": [1, 2, 3], ".collection_type": "tuple"}'
-        
+
         assert ser.loads(ser.string) == sample_tuple
 
     def test_int(self):
         ser.string = '123445'
-        
+
         assert ser.loads(ser.string) == sample_int
 
     def test_float(self):
@@ -79,12 +86,12 @@ class TestFunctionsJson:
 
     def test_lambda(self):
         ser.string = '{".META": {"140224654409936": {".code": {"co_argcount": 1, "co_posonlyargcount": 0, "co_kwonlyargcount": 0, "co_nlocals": 1, "co_stacksize": 2, "co_flags": 67, "co_code": [124, 0, 100, 1, 19, 0, 83, 0], "co_consts": {".list": [null, 3], ".collection_type": "tuple"}, "co_names": {".list": [], ".collection_type": "tuple"}, "co_varnames": {".list": ["x"], ".collection_type": "tuple"}, "co_freevars": {".list": [], ".collection_type": "tuple"}, "co_cellvars": {".list": [], ".collection_type": "tuple"}, "co_filename": "/home/slava/Public/Testing/sample_objects.py", "co_name": "<lambda>", "co_firstlineno": 40, "co_lnotab": []}, ".metatype": "func", ".name": "<lambda>", ".module": "sample_objects", ".refs": {".list": [{}, {}, {}, {".list": [], ".collection_type": "set"}], ".collection_type": "tuple"}, ".defaults": null}}, ".OBJ": {".metaid": "140224654409936"}}'
-        
+
         assert math.isclose(ser.loads(ser.string)(1.6), 4.096)
 
     def test_inner_func(self):
         ser.string = '{".META": {"140335234293824": {".code": {"co_argcount": 1, "co_posonlyargcount": 0, "co_kwonlyargcount": 0, "co_nlocals": 2, "co_stacksize": 3, "co_flags": 67, "co_code": [100, 1, 100, 2, 132, 0, 125, 1, 124, 1, 124, 1, 124, 0, 131, 1, 124, 0, 23, 0, 131, 1, 83, 0], "co_consts": {".list": [null, null, "sample_inner_func.<locals>.inner"], ".collection_type": "tuple"}, "co_names": {".list": [], ".collection_type": "tuple"}, "co_varnames": {".list": ["n", "inner"], ".collection_type": "tuple"}, "co_freevars": {".list": [], ".collection_type": "tuple"}, "co_cellvars": {".list": [], ".collection_type": "tuple"}, "co_filename": "/home/slava/Public/Testing/tests/sample_objects.py", "co_name": "sample_inner_func", "co_firstlineno": 31, "co_lnotab": [0, 1, 8, 3]}, ".metatype": "func", ".name": "sample_inner_func", ".module": "tests.sample_objects", ".refs": {".list": [{}, {}, {}, {".list": [], ".collection_type": "set"}], ".collection_type": "tuple"}, ".defaults": null}}, ".OBJ": {".metaid": "140335234293824"}}'
-        
+
         assert math.isclose(ser.loads(ser.string)(1.99), 37643.98251178124)
 
 
@@ -189,28 +196,28 @@ class TestPackUnpackJson:
 
     def test_generator(self):
         a = sample_generator
-        
+
         data = [val for val in ser.loads(ser.dumps(a))()]
         assert data == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     def test_fibonacci(self):
         a = sample_fibonacci
-        
+
         assert ser.loads(ser.dumps(a))(7) == 21
 
     def test_lambda(self):
         a = sample_lambda
-        
+
         assert math.isclose(ser.loads(ser.dumps(a))(1.6), 4.096)
 
     def test_inner_func(self):
         a = sample_inner_func
-        
+
         assert math.isclose(ser.loads(ser.dumps(a))(1.99), 37643.98251178124)
 
     def test_class_A(self):
         a = A
-        
+
         instance = ser.loads(ser.dumps(a))()
         assert ser.loads(ser.dumps(a)).__name__ == 'A'
         assert type(ser.loads(ser.dumps(a))) == type
@@ -218,7 +225,7 @@ class TestPackUnpackJson:
 
     def test_class_B(self):
         a = B
-        
+
         instance = ser.loads(ser.dumps(a))()
         assert ser.loads(ser.dumps(a)).__name__ == 'B'
         assert type(ser.loads(ser.dumps(a))) == type
@@ -227,7 +234,7 @@ class TestPackUnpackJson:
 
     def test_class_C(self):
         a = C
-        
+
         instance = ser.loads(ser.dumps(a))(lambda x: x + x)
         assert ser.loads(ser.dumps(a)).__name__ == 'C'
         assert ser.loads(ser.dumps(a)).__base__.__name__ == 'A'
@@ -237,14 +244,14 @@ class TestPackUnpackJson:
 
     def test_class_Foo(self):
         a = Foo
-        
+
         assert not hasattr(ser.loads(ser.dumps(a)), 'bar')
         assert hasattr(ser.loads(ser.dumps(a)), 'BAR')
         f = ser.loads(ser.dumps(a))()
         assert f.BAR == "bip"
 
 
-ser.change_form('yaml')
+ser = get_serializer("yaml")
 
 
 class TestClassesJson:
@@ -283,54 +290,54 @@ class TestClassesJson:
 class TestPackUnpackYaml:
     def test_tuple(self):
         a = sample_tuple
-        
+
         assert ser.loads(ser.dumps(a)) == sample_tuple
 
     def test_int(self):
         a = sample_int
-        
+
         assert ser.loads(ser.dumps(a)) == sample_int
 
     def test_float(self):
         a = sample_float
-        
+
         assert math.isclose(ser.loads(ser.dumps(a)), sample_float)
 
     def test_bool(self):
         a = sample_bool
-        
+
         assert ser.loads(ser.dumps(a)) == sample_bool
 
     def test_string(self):
         a = sample_string
-        
+
         assert ser.loads(ser.dumps(a)) == sample_string
 
     def test_datetime(self):
         a = sample_datetime
-        
+
         assert ser.loads(ser.dumps(a)) == sample_datetime
 
     def test_None(self):
         a = sample_None
-        
+
         assert ser.loads(ser.dumps(a)) == sample_None
 
     def test_dict(self):
         a = sample_dict
-        
+
         assert isinstance(ser.loads(ser.dumps(a)), dict)
         assert ser.loads(ser.dumps(a))[123445] == sample_bool
         assert ser.loads(ser.dumps(a))[sample_string] == sample_tuple
 
     def test_list(self):
         a = sample_list
-        
+
         assert ser.loads(ser.dumps(a)) == sample_list
 
     def test_set(self):
         a = sample_set
-        
+
         assert isinstance(ser.loads(ser.dumps(a)), set)
         assert len(ser.loads(ser.dumps(a))) == 5
         for i in sample_set:
@@ -338,7 +345,7 @@ class TestPackUnpackYaml:
 
     def test_frozenset(self):
         a = sample_frozenset
-        
+
         assert isinstance(ser.loads(ser.dumps(a)), frozenset)
         assert len(ser.loads(ser.dumps(a))) == 3
         for i in sample_frozenset:
@@ -346,7 +353,7 @@ class TestPackUnpackYaml:
 
     def test_func(self):
         a = sample_func
-        
+
         assert math.isclose(ser.loads(ser.dumps(a))(2.4), 1.008)
 
     def test_funcname(self):
@@ -355,33 +362,33 @@ class TestPackUnpackYaml:
             return "works"
 
         a = func
-        
+
         assert ser.loads(ser.dumps(a))() == "works"
 
     def test_generator(self):
         a = sample_generator
-        
+
         data = [val for val in ser.loads(ser.dumps(a))()]
         assert data == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     def test_fibonacci(self):
         a = sample_fibonacci
-        
+
         assert ser.loads(ser.dumps(a))(7) == 21
 
     def test_lambda(self):
         a = sample_lambda
-        
+
         assert math.isclose(ser.loads(ser.dumps(a))(1.6), 4.096)
 
     def test_inner_func(self):
         a = sample_inner_func
-        
+
         assert math.isclose(ser.loads(ser.dumps(a))(1.99), 37643.98251178124)
 
     def test_class_A(self):
         a = A
-        
+
         instance = ser.loads(ser.dumps(a))()
         assert ser.loads(ser.dumps(a)).__name__ == 'A'
         assert type(ser.loads(ser.dumps(a))) == type
@@ -389,7 +396,7 @@ class TestPackUnpackYaml:
 
     def test_class_B(self):
         a = B
-        
+
         instance = ser.loads(ser.dumps(a))()
         assert ser.loads(ser.dumps(a)).__name__ == 'B'
         assert type(ser.loads(ser.dumps(a))) == type
@@ -398,7 +405,7 @@ class TestPackUnpackYaml:
 
     def test_class_C(self):
         a = C
-        
+
         instance = ser.loads(ser.dumps(a))(lambda x: x + x)
         assert ser.loads(ser.dumps(a)).__name__ == 'C'
         assert ser.loads(ser.dumps(a)).__base__.__name__ == 'A'
@@ -408,7 +415,7 @@ class TestPackUnpackYaml:
 
     def test_class_Foo(self):
         a = Foo
-        
+
         assert not hasattr(ser.loads(ser.dumps(a)), 'bar')
         assert hasattr(ser.loads(ser.dumps(a)), 'BAR')
         f = ser.loads(ser.dumps(a))()

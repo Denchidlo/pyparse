@@ -5,7 +5,7 @@ setup(
 
     packages=['lib', 'lib/Factory', 'lib/JsonParser', 'lib/packager', 'lib/YamlParser',
               'lib/packager/creator', 'lib/packager/objectinspector'],
-    version='0.2.4',
+    version='0.2.5',
 
     description='Serializer/Deserializer',
     author='Me',
