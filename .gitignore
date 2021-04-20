@@ -2,8 +2,9 @@ __pycache__
 trash
 sandbox.py
 .ipynb_checkpoints
-/lib.egg-info
+*.egg-info
 /build
 /venv
+/dist
 .coverage
 sandbox2.py
